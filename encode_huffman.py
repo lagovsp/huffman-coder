@@ -63,10 +63,12 @@ class HuffmanCoder:
 
         return s_entries.popitem()[0]
 
-    def _set_codes_from_tree(self, ver: Any, prefix=str()) -> None:
+    def _set_codes_from_tree(self,
+                             ver: 'HuffmanCoder.Vertex',
+                             prefix=str()) -> None:
         if not ver.is_terminal:
-            self._set_codes_from_tree(ver.greater, prefix=prefix[:] + '1')
-            self._set_codes_from_tree(ver.lower, prefix=prefix[:] + '0')
+            self._set_codes_from_tree(ver.greater, prefix=prefix + '1')
+            self._set_codes_from_tree(ver.lower, prefix=prefix + '0')
             return
         self.codes.update({ver.elem: prefix if prefix else '0'})
 
@@ -103,7 +105,6 @@ def main():
 
     if sys.argv[1] == 'f':
         if not len(sys.argv) == 3:
-            print('not len 2', len(sys.argv))
             script_help()
             return
 
@@ -118,7 +119,7 @@ def main():
     coder = HuffmanCoder()
     coded_data, codes = coder.encode(text)
     print(f'USED FOLLOWING CODES\n{codes}')
-    print(f'CODED TEXT\n{" ".join(coded_data)}')
+    print(f'CODED TEXT\n{"".join(coded_data)}')
 
 
 if __name__ == '__main__':
