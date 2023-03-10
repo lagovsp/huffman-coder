@@ -1,3 +1,4 @@
+import os
 import sys
 from typing import Any
 
@@ -75,14 +76,49 @@ class HuffmanCoder:
         return [self.codes[s] for s in data], self.codes
 
 
+def script_help():
+    file_name = __file__.split('/')[-1]
+    print(f'''
+        DESCRIPTION
+        —   These script receives a text and prints it out coded with Huffman coding algorithm
+        USAGE
+        —   The following ways to launch the scripts can be used:
+            —   python3 {file_name} t <TEXT> — encodes TEXT
+            —   python3 {file_name} f <FILE> — encodes the text, stored in FILE 
+        NOTES
+        —   Text passed as an argument must not contain any special symbols (commas, braces, etc.)
+            to avoid any bash conflicts
+        '''
+          )
+
+
 def main():
-    if not len(sys.argv) == 2:
-        raise Exception(f'BAD ARGUMENTS')
+    if len(sys.argv) < 3:
+        script_help()
+        return
+
+    if sys.argv[1] not in ['t', 'f']:
+        script_help()
+        return
+
+    if sys.argv[1] == 'f':
+        if not len(sys.argv) == 3:
+            print('not len 2', len(sys.argv))
+            script_help()
+            return
+
+        with open(sys.argv[2], 'r') as reader:
+            text = ''.join(reader.readlines())
+
+    if sys.argv[1] == 't':
+        text = ' '.join(sys.argv[2:])
+
+    print(f'TEXT\n{text}')
 
     coder = HuffmanCoder()
-    coded_data, codes = coder.encode(sys.argv[1])
+    coded_data, codes = coder.encode(text)
     print(f'USED FOLLOWING CODES\n{codes}')
-    print(f'CODED DATA\n{" ".join(coded_data)}')
+    print(f'CODED TEXT\n{" ".join(coded_data)}')
 
 
 if __name__ == '__main__':
